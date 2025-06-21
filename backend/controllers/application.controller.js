@@ -24,8 +24,6 @@ export const applyJob = async (req, res) => {
     }
 
     const job = await Job.findById(jobId);
-    console.log(job);
-
     if (!job) {
       return res.status(404).json({
         message: "Job not found",
@@ -37,7 +35,6 @@ export const applyJob = async (req, res) => {
       job: jobId,
       applicant: userId,
     });
-
     job.applications.push(newApplication._id);
     await job.save();
 
@@ -120,8 +117,6 @@ export const updateJobStatus = async (req, res) => {
     }
 
     const application = await Application.findOne({ _id: applicationId });
-    console.log(application);
-
     if (!application) {
       return res.status(400).json({
         message: "Application not found",
