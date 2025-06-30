@@ -9,7 +9,7 @@ import { USER_API_END_POINT } from "@/utils/Constants";
 import axios from "axios";
 import { toast } from "sonner";
 import { useDispatch, useSelector } from "react-redux";
-import { setLoading } from "@/redux/authSlice";
+import { setLoading, setUser } from "@/redux/authSlice";
 import { Loader2 } from "lucide-react";
 
 const Login = () => {
@@ -32,6 +32,8 @@ const Login = () => {
 
     try {
       dispatch(setLoading(true));
+      console.log(input);
+
       const res = await axios.post(`${USER_API_END_POINT}/login`, input, {
         header: {
           "Content-type": "application/json",
@@ -40,8 +42,9 @@ const Login = () => {
       });
 
       if (res.data.success) {
-        toast.success(res.data.message);
+        dispatch(setUser(res.data.user));
         navigate("/");
+        toast.success(res.data.message);
       }
     } catch (error) {
       console.log(error);
@@ -96,8 +99,8 @@ const Login = () => {
                 <Input
                   type="radio"
                   name="role"
-                  value="recuiter"
-                  checked={input.role === "recuiter"}
+                  value="recruiter"
+                  checked={input.role === "recruiter"}
                   onChange={changeEventHandler}
                   className="cursor-pointer accent-blue-600"
                 />
@@ -107,8 +110,7 @@ const Login = () => {
           </div>
           {loading ? (
             <Button className="w-full my-4">
-              {" "}
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Please Wait{" "}
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Please Wait
             </Button>
           ) : (
             <Button
@@ -119,7 +121,7 @@ const Login = () => {
             </Button>
           )}
           <span className="text-sm">
-            Don't have an account?{" "}
+            Don't have an account?
             <Link to="/signup" className="text-blue-600">
               Sign Up
             </Link>
